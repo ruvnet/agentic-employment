@@ -1,5 +1,5 @@
 # Agentic Employment Infrastructure
-![Agentic Employment](https://github.com/ruvnet/agentic-employment/blob/main/assets/agentic-one.png.png?raw=true)
+[![Agentic Employment](https://github.com/ruvnet/agentic-employment/blob/main/assets/agentic-one.png.png?raw=true)](https://huggingface.co/spaces/ruv/agentic-employment)
 
 This project implements an Agentic Employment Infrastructure using FastAPI, Flask, Websockets, LiteLLM, and Gradio. The infrastructure aims to manage and enhance various aspects of workforce management through advanced autonomous agents.
 
