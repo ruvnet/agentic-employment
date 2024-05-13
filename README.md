@@ -5,6 +5,10 @@ This project implements an Agentic Employment Infrastructure using FastAPI, Flas
 
 This platform is designed to empower organizations by automating and enhancing their employment processes through advanced autonomous agents. Here you will find all the information needed to effectively use and customize the system.
 
+## Demo
+
+Check out the demo of the Agentic Employment Infrastructure on Hugging Face Spaces: [Agentic Employment Demo](https://huggingface.co/spaces/ruv/agentic-employment)
+
 ## Purpose of the Application
 
 The Agentic Employment Infrastructure aims to revolutionize the way businesses manage and interact with their workforce. By leveraging cutting-edge AI and machine learning technologies, this platform automates routine tasks, optimizes workforce management, and provides insightful analytics to drive decision-making.
