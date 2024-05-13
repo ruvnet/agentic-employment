@@ -3,7 +3,7 @@
 
 This project implements an Agentic Employment Infrastructure using FastAPI, Flask, Websockets, LiteLLM, and Gradio. The infrastructure aims to manage and enhance various aspects of workforce management through advanced autonomous agents.
 
-This platform is designed to empower organizations by automating and enhancing their employment processes through advanced autonomous agents. Here you will find all the information needed to effectively use and customize the system.
+The primary focus of the Agentic Employment Infrastructure is to streamline and optimize employment processes. It automates routine tasks, facilitates real-time communication, and integrates seamlessly with existing systems. The platform supports a wide range of functionalities, including agent management, task automation, collaboration tools, and advanced configuration options.
 
 ## Demo
 
