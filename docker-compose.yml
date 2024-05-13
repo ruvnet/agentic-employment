@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./frontend:/app
+    command: python -m frontend.main
