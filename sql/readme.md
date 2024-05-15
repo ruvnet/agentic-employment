@@ -211,3 +211,145 @@ CREATE INDEX idx_users_agents_tenant_id ON users_agents(tenant_id);
     ```sh
     psql -h your-supabase-url -U your-username -d your-database -f path/to/sql_script.sql
     ```
+
+# Setting Up Supabase and Installing SQL Files
+
+## Overview
+This guide will walk you through setting up Supabase, configuring your environment, and running a bash script to install various SQL files into your Supabase database.
+
+## Prerequisites
+- A Supabase account and project
+- `psql` command-line tool installed
+- A terminal or command-line interface
+
+## Step 1: Set Up Supabase
+
+### 1.1 Create a Supabase Account
+1. Go to [Supabase](https://supabase.io/).
+2. Sign up for a free account and log in.
+
+### 1.2 Create a New Project
+1. Once logged in, click on "New Project".
+2. Fill in the project details:
+   - **Name**: Choose a name for your project.
+   - **Database Password**: Set a strong password.
+   - **Region**: Select a region close to you.
+3. Click "Create new project".
+
+### 1.3 Get Database Connection Details
+1. After the project is created, navigate to the "Settings" > "Database" tab.
+2. Note down the following details:
+   - **Database URL**
+   - **Database name**
+   - **Database user**
+   - **Database password**
+
+## Step 2: Install `psql`
+
+### 2.1 Install on macOS
+```sh
+brew install postgresql
+```
+
+### 2.2 Install on Linux (Debian-based)
+```sh
+sudo apt update
+sudo apt install postgresql-client
+```
+
+### 2.3 Install on Windows
+Download and install PostgreSQL from the [official website](https://www.postgresql.org/download/), ensuring `psql` is included in the installation.
+
+## Step 3: Prepare the SQL Files
+
+Ensure that you have the following SQL files in your project directory:
+- `agent_data.sql`
+- `agent_interaction.sql`
+- `analytics_reporting.sql`
+- `chat_history_agent_details.sql`
+- `command_control.sql`
+- `documentation.sql`
+- `governance.sql`
+- `system_settings.sql`
+- `users_agents.sql`
+
+## Step 4: Create the `.env` File
+
+Create a `.env` file in your project directory and add the following content, replacing the placeholders with your actual Supabase details:
+
+```env
+SUPABASE_URL=your-supabase-url
+SUPABASE_DB=your-database-name
+SUPABASE_USER=your-username
+SUPABASE_PASSWORD=your-password
+```
+
+## Step 5: Create the Installation Script
+
+Create a file named `install_sql.sh` in your project directory and add the following content:
+
+```bash
+#!/bin/bash
+
+# Load environment variables
+source .env
+
+# Check if environment variables are set
+if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_DB" ] || [ -z "$SUPABASE_USER" ] || [ -z "$SUPABASE_PASSWORD" ]; then
+  echo "Please set the SUPABASE_URL, SUPABASE_DB, SUPABASE_USER, and SUPABASE_PASSWORD environment variables in the .env file."
+  exit 1
+fi
+
+# Function to execute a SQL file
+execute_sql() {
+  local file=$1
+  echo "Executing $file..."
+  PGPASSWORD=$SUPABASE_PASSWORD psql -h $SUPABASE_URL -d $SUPABASE_DB -U $SUPABASE_USER -f $file
+  if [ $? -eq 0 ]; then
+    echo "$file executed successfully."
+  else
+    echo "Error executing $file."
+    exit 1
+  fi
+}
+
+# List of SQL files to be executed
+sql_files=(
+  "agent_data.sql"
+  "agent_interaction.sql"
+  "analytics_reporting.sql"
+  "chat_history_agent_details.sql"
+  "command_control.sql"
+  "documentation.sql"
+  "governance.sql"
+  "system_settings.sql"
+  "users_agents.sql"
+)
+
+# Execute each SQL file
+for sql_file in "${sql_files[@]}"; do
+  if [ -f "$sql_file" ]; then
+    execute_sql "$sql_file"
+  else
+    echo "File $sql_file does not exist."
+    exit 1
+  fi
+done
+
+echo "All SQL files executed successfully."
+```
+
+## Step 6: Run the Installation Script
+
+### 6.1 Make the Script Executable
+Run the following command to make the script executable:
+```sh
+chmod +x install_sql.sh
+```
+
+### 6.2 Execute the Script
+Run the script to install the SQL files into your Supabase database:
+```sh
+./install_sql.sh
+```
+
