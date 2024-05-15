@@ -1,12 +1,48 @@
 #!/bin/bash
 
-# Load environment variables
-source .env
+# Check if psql is installed
+if ! command -v psql &> /dev/null; then
+  echo "psql could not be found. Installing it now..."
 
-# Check if environment variables are set
-if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_DB" ] || [ -z "$SUPABASE_USER" ] || [ -z "$SUPABASE_PASSWORD" ]; then
-  echo "Please set the SUPABASE_URL, SUPABASE_DB, SUPABASE_USER, and SUPABASE_PASSWORD environment variables in the .env file."
+  # Check OS and install psql accordingly
+  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt update
+    sudo apt install postgresql-client -y
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install postgresql
+  elif [[ "$OSTYPE" == "msys" ]]; then
+    echo "Please install psql manually from: https://www.postgresql.org/download/windows/"
+    exit 1
+  else
+    echo "Unsupported OS. Please install psql manually."
+    exit 1
+  fi
+fi
+
+# Load environment variables
+if [ -f ".env" ]; then
+  source .env
+else
+  echo ".env file not found. Please create one with your Supabase configuration."
   exit 1
+fi
+
+# Prompt for environment variables if not set
+if [ -z "$SUPABASE_URL" ]; then
+  read -p "Enter your Supabase URL: " SUPABASE_URL
+fi
+
+if [ -z "$SUPABASE_DB" ]; then
+  read -p "Enter your Supabase database name: " SUPABASE_DB
+fi
+
+if [ -z "$SUPABASE_USER" ]; then
+  read -p "Enter your Supabase username: " SUPABASE_USER
+fi
+
+if [ -z "$SUPABASE_PASSWORD" ]; then
+  read -s -p "Enter your Supabase password: " SUPABASE_PASSWORD
+  echo
 fi
 
 # Function to execute a SQL file
