@@ -12,21 +12,21 @@ CREATE TABLE agent_metrics (
 
 -- Insert sample data into agent_metrics table
 INSERT INTO agent_metrics (tenant_id, date, total_agents, active_agents, tasks_completed, avg_rating) VALUES
-('tenant-1-uuid', '2023-01-01', 500, 375, 8000, 4.5),
-('tenant-1-uuid', '2023-01-08', 525, 395, 8500, 4.52),
-('tenant-1-uuid', '2023-01-15', 540, 410, 9200, 4.54),
-('tenant-1-uuid', '2023-01-22', 560, 430, 9800, 4.56),
-('tenant-1-uuid', '2023-01-29', 575, 445, 10400, 4.58),
-('tenant-2-uuid', '2023-02-05', 590, 460, 11000, 4.6),
-('tenant-2-uuid', '2023-02-12', 600, 475, 11600, 4.62),
-('tenant-2-uuid', '2023-02-19', 615, 490, 12200, 4.64),
-('tenant-2-uuid', '2023-02-26', 630, 505, 12800, 4.66),
-('tenant-2-uuid', '2023-03-05', 645, 520, 13400, 4.68),
-('tenant-1-uuid', '2023-03-12', 660, 535, 14000, 4.7),
-('tenant-1-uuid', '2023-03-19', 675, 550, 14600, 4.72),
-('tenant-1-uuid', '2023-03-26', 690, 565, 15200, 4.74),
-('tenant-1-uuid', '2023-04-02', 700, 580, 15800, 4.76),
-('tenant-1-uuid', '2023-04-09', 710, 595, 16400, 4.78);
+('00000000-0000-0000-0000-000000000001', '2023-01-01', 500, 375, 8000, 4.5),
+('00000000-0000-0000-0000-000000000001', '2023-01-08', 525, 395, 8500, 4.52),
+('00000000-0000-0000-0000-000000000001', '2023-01-15', 540, 410, 9200, 4.54),
+('00000000-0000-0000-0000-000000000001', '2023-01-22', 560, 430, 9800, 4.56),
+('00000000-0000-0000-0000-000000000001', '2023-01-29', 575, 445, 10400, 4.58),
+('00000000-0000-0000-0000-000000000002', '2023-02-05', 590, 460, 11000, 4.6),
+('00000000-0000-0000-0000-000000000002', '2023-02-12', 600, 475, 11600, 4.62),
+('00000000-0000-0000-0000-000000000002', '2023-02-19', 615, 490, 12200, 4.64),
+('00000000-0000-0000-0000-000000000002', '2023-02-26', 630, 505, 12800, 4.66),
+('00000000-0000-0000-0000-000000000002', '2023-03-05', 645, 520, 13400, 4.68),
+('00000000-0000-0000-0000-000000000001', '2023-03-12', 660, 535, 14000, 4.7),
+('00000000-0000-0000-0000-000000000001', '2023-03-19', 675, 550, 14600, 4.72),
+('00000000-0000-0000-0000-000000000001', '2023-03-26', 690, 565, 15200, 4.74),
+('00000000-0000-0000-0000-000000000001', '2023-04-02', 700, 580, 15800, 4.76),
+('00000000-0000-0000-0000-000000000001', '2023-04-09', 710, 595, 16400, 4.78);
 
 -- Create the table for storing agent team performance
 CREATE TABLE agent_teams (
@@ -41,11 +41,11 @@ CREATE TABLE agent_teams (
 
 -- Insert sample data into agent_teams table
 INSERT INTO agent_teams (tenant_id, team, agents, tasks, avg_rating) VALUES
-('tenant-1-uuid', 'Sales', 120, 3200, 4.7),
-('tenant-1-uuid', 'Support', 180, 4800, 4.75),
-('tenant-1-uuid', 'Marketing', 95, 2400, 4.65),
-('tenant-2-uuid', 'Analytics', 65, 1600, 4.8),
-('tenant-2-uuid', 'HR', 40, 800, 4.72);
+('00000000-0000-0000-0000-000000000001', 'Sales', 120, 3200, 4.7),
+('00000000-0000-0000-0000-000000000001', 'Support', 180, 4800, 4.75),
+('00000000-0000-0000-0000-000000000001', 'Marketing', 95, 2400, 4.65),
+('00000000-0000-0000-0000-000000000002', 'Analytics', 65, 1600, 4.8),
+('00000000-0000-0000-0000-000000000002', 'HR', 40, 800, 4.72);
 
 -- Create the table for storing custom reports
 CREATE TABLE custom_reports (
@@ -85,7 +85,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "metrics_access" ON agent_metrics
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for agent_teams
 CREATE POLICY "tenant_isolation" ON agent_teams
@@ -97,7 +97,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "teams_access" ON agent_teams
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for custom_reports
 CREATE POLICY "tenant_isolation" ON custom_reports
@@ -109,7 +109,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "reports_access" ON custom_reports
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for forecast_data
 CREATE POLICY "tenant_isolation" ON forecast_data
@@ -121,7 +121,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "forecast_access" ON forecast_data
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create indexes for optimization
 CREATE INDEX idx_agent_metrics_tenant_id ON agent_metrics(tenant_id);

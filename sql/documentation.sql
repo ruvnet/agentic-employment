@@ -10,10 +10,10 @@ CREATE TABLE documentation (
 
 -- Insert initial documentation data
 INSERT INTO documentation (tenant_id, doc_type, title, content) VALUES
-('tenant-1-uuid', 'User Guide', 'Getting Started with Agents', 'This guide will help you get started with setting up and managing agents.'),
-('tenant-1-uuid', 'API Reference', 'Agent API Endpoints', 'This document provides details on the API endpoints available for agent management.'),
-('tenant-2-uuid', 'User Guide', 'Advanced Agent Configuration', 'This guide covers advanced configuration options for agents.'),
-('tenant-2-uuid', 'Compliance', 'Data Privacy Policies', 'This document outlines the data privacy policies applicable to agents.');
+('00000000-0000-0000-0000-000000000001', 'User Guide', 'Getting Started with Agents', 'This guide will help you get started with setting up and managing agents.'),
+('00000000-0000-0000-0000-000000000001', 'API Reference', 'Agent API Endpoints', 'This document provides details on the API endpoints available for agent management.'),
+('00000000-0000-0000-0000-000000000002', 'User Guide', 'Advanced Agent Configuration', 'This guide covers advanced configuration options for agents.'),
+('00000000-0000-0000-0000-000000000002', 'Compliance', 'Data Privacy Policies', 'This document outlines the data privacy policies applicable to agents.');
 
 -- Enable Row-Level Security (RLS) for the documentation table
 ALTER TABLE documentation ENABLE ROW LEVEL SECURITY;
@@ -28,7 +28,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "documentation_access" ON documentation
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create indexes for optimization
 CREATE INDEX idx_documentation_tenant_id ON documentation(tenant_id);

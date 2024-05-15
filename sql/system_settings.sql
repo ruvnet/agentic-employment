@@ -13,7 +13,7 @@ CREATE TABLE agent_parameters (
 
 -- Insert initial agent parameters data
 INSERT INTO agent_parameters (tenant_id, default_learning_rate, default_exploration_rate, agent_types, agent_specializations, reward_structure, max_tokens) VALUES
-('tenant-1-uuid', 0.1, 0.1, ARRAY['Conversational', 'Retrieval-based'], ARRAY['Sales', 'Support'], 'Fixed', 512);
+('00000000-0000-0000-0000-000000000001', 0.1, 0.1, ARRAY['Conversational', 'Retrieval-based'], ARRAY['Sales', 'Support'], 'Fixed', 512);
 
 -- Create the table for storing resource management settings
 CREATE TABLE resource_management (
@@ -28,7 +28,7 @@ CREATE TABLE resource_management (
 
 -- Insert initial resource management data
 INSERT INTO resource_management (tenant_id, max_compute_usage, max_storage_usage, cost_per_compute_hour, cost_per_gb_storage) VALUES
-('tenant-1-uuid', 10000, 1000, 0.05, 0.02);
+('00000000-0000-0000-0000-000000000001', 10000, 1000, 0.05, 0.02);
 
 -- Create the table for storing access and permissions settings
 CREATE TABLE access_permissions (
@@ -43,7 +43,7 @@ CREATE TABLE access_permissions (
 
 -- Insert initial access and permissions data
 INSERT INTO access_permissions (tenant_id, user_roles, enable_api_access, api_rate_limit, enable_logging) VALUES
-('tenant-1-uuid', ARRAY['Administrator', 'Developer'], TRUE, 1000, TRUE);
+('00000000-0000-0000-0000-000000000001', ARRAY['Administrator', 'Developer'], TRUE, 1000, TRUE);
 
 -- Enable Row-Level Security (RLS) for all system settings tables
 ALTER TABLE agent_parameters ENABLE ROW LEVEL SECURITY;
@@ -60,7 +60,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "parameters_access" ON agent_parameters
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for resource_management
 CREATE POLICY "tenant_isolation" ON resource_management
@@ -72,7 +72,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "resource_access" ON resource_management
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for access_permissions
 CREATE POLICY "tenant_isolation" ON access_permissions
@@ -84,7 +84,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "permissions_access" ON access_permissions
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create indexes for optimization
 CREATE INDEX idx_agent_parameters_tenant_id ON agent_parameters(tenant_id);

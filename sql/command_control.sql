@@ -11,11 +11,11 @@ CREATE TABLE agent_data (
 
 -- Insert initial agent data
 INSERT INTO agent_data (tenant_id, agent_name, status, current_task, performance_metrics) VALUES
-('tenant-1-uuid', 'NLP Agent', 'Active', 'Text Processing', 'High'),
-('tenant-1-uuid', 'Vision Agent', 'Idle', 'Image Classification', 'Medium'),
-('tenant-2-uuid', 'Data Agent', 'Failed', 'Data Cleaning', 'Low'),
-('tenant-2-uuid', 'Chatbot', 'Active', 'Customer Service', 'High'),
-('tenant-1-uuid', 'Analysis Agent', 'Idle', 'Data Analysis', 'Medium');
+('00000000-0000-0000-0000-000000000001', 'NLP Agent', 'Active', 'Text Processing', 'High'),
+('00000000-0000-0000-0000-000000000001', 'Vision Agent', 'Idle', 'Image Classification', 'Medium'),
+('00000000-0000-0000-0000-000000000002', 'Data Agent', 'Failed', 'Data Cleaning', 'Low'),
+('00000000-0000-0000-0000-000000000002', 'Chatbot', 'Active', 'Customer Service', 'High'),
+('00000000-0000-0000-0000-000000000001', 'Analysis Agent', 'Idle', 'Data Analysis', 'Medium');
 
 -- Create the table for storing chat history
 CREATE TABLE chat_history (
@@ -39,8 +39,8 @@ CREATE TABLE error_log (
 
 -- Insert initial error log data
 INSERT INTO error_log (tenant_id, time, agent_id, error_type, message) VALUES
-('tenant-1-uuid', '2024-05-15 12:01:00', 3, 'Connection Timeout', 'Failed to connect to the database'),
-('tenant-2-uuid', '2024-05-15 12:05:00', 5, 'Memory Overflow', 'Exceeded memory limits during data processing');
+('00000000-0000-0000-0000-000000000001', '2024-05-15 12:01:00', 3, 'Connection Timeout', 'Failed to connect to the database'),
+('00000000-0000-0000-0000-000000000002', '2024-05-15 12:05:00', 5, 'Memory Overflow', 'Exceeded memory limits during data processing');
 
 -- Enable Row-Level Security (RLS) for agent_data, chat_history, and error_log tables
 ALTER TABLE agent_data ENABLE ROW LEVEL SECURITY;
@@ -57,7 +57,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "agent_access" ON agent_data
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for chat_history
 CREATE POLICY "tenant_isolation" ON chat_history
@@ -69,7 +69,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "chat_access" ON chat_history
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create RLS policies for error_log
 CREATE POLICY "tenant_isolation" ON error_log
@@ -81,7 +81,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "error_access" ON error_log
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create indexes for optimization
 CREATE INDEX idx_agent_data_tenant_id ON agent_data(tenant_id);

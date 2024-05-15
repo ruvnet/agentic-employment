@@ -12,13 +12,13 @@ CREATE TABLE agent_interactions (
 
 -- Insert initial agent interaction data
 INSERT INTO agent_interactions (tenant_id, agent1, agent2, interaction_type, description, status) VALUES
-('tenant-1-uuid', 'Sales AI', 'Support Bot', 'Collaboration Request', 'Help with customer issue', 'In Progress'),
-('tenant-1-uuid', 'Marketing Assistant', 'Data Analyst', 'Knowledge Share', 'Campaign insights', 'Completed'),
-('tenant-2-uuid', 'HR Coordinator', 'IT Helpdesk', 'Task Handoff', 'New employee onboarding', 'Pending'),
-('tenant-2-uuid', 'Data Analyst', 'Sales AI', 'Feedback', 'Improve data collection process', 'In Progress'),
-('tenant-1-uuid', 'All Agents', 'Hive Mind', 'Hive Structure Update', 'Reorganize into specialized clusters', 'Completed'),
-('tenant-2-uuid', 'Support Bot', 'Support Bot', 'Evolutionary Adaptation', 'Optimize response time by 10%', 'In Progress'),
-('tenant-1-uuid', 'Project Manager', 'Task Allocation Engine', 'Self-Orchestration', 'Dynamically assign tasks based on agent availability and skills', 'Ongoing');
+('00000000-0000-0000-0000-000000000001', 'Sales AI', 'Support Bot', 'Collaboration Request', 'Help with customer issue', 'In Progress'),
+('00000000-0000-0000-0000-000000000001', 'Marketing Assistant', 'Data Analyst', 'Knowledge Share', 'Campaign insights', 'Completed'),
+('00000000-0000-0000-0000-000000000002', 'HR Coordinator', 'IT Helpdesk', 'Task Handoff', 'New employee onboarding', 'Pending'),
+('00000000-0000-0000-0000-000000000002', 'Data Analyst', 'Sales AI', 'Feedback', 'Improve data collection process', 'In Progress'),
+('00000000-0000-0000-0000-000000000001', 'All Agents', 'Hive Mind', 'Hive Structure Update', 'Reorganize into specialized clusters', 'Completed'),
+('00000000-0000-0000-0000-000000000002', 'Support Bot', 'Support Bot', 'Evolutionary Adaptation', 'Optimize response time by 10%', 'In Progress'),
+('00000000-0000-0000-0000-000000000001', 'Project Manager', 'Task Allocation Engine', 'Self-Orchestration', 'Dynamically assign tasks based on agent availability and skills', 'Ongoing');
 
 -- Enable Row-Level Security (RLS) for agent_interactions table
 ALTER TABLE agent_interactions ENABLE ROW LEVEL SECURITY;
@@ -33,7 +33,7 @@ FOR SELECT USING (true);
 
 CREATE POLICY "interaction_access" ON agent_interactions
 FOR SELECT
-USING (auth.uid() = user_id);
+USING (tenant_id = current_setting('app.current_tenant')::uuid);
 
 -- Create indexes for optimization
 CREATE INDEX idx_agent_interactions_tenant_id ON agent_interactions(tenant_id);
