@@ -196,8 +196,8 @@ CREATE INDEX idx_users_agents_tenant_id ON users_agents(tenant_id);
 ### Setting Up the Database
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/supabase-sql.git
-    cd supabase-sql
+    git clone https://github.com/ruvnet/agentic-employment.git
+    cd agentic-employment
     ```
 
 2. Configure your Supabase environment variables in a `.env` file:
