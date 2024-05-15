@@ -206,9 +206,18 @@ CREATE INDEX idx_users_agents_tenant_id ON users_agents(tenant_id);
     ```
 
 3. Run the SQL scripts to set up the database structure:
-    ```sh
-    psql -h your-supabase-url -U your-username -d your-database -f path/to/sql_script.sql
-    ```
+
+```sh
+psql -h your-supabase-url -U your-username -d your-database -f agent_data.sql
+psql -h your-supabase-url -U your-username -d your-database -f agent_interaction.sql
+psql -h your-supabase-url -U your-username -d your-database -f analytics_reporting.sql
+psql -h your-supabase-url -U your-username -d your-database -f chat_history_agent_details.sql
+psql -h your-supabase-url -U your-username -d your-database -f command_control.sql
+psql -h your-supabase-url -U your-username -d your-database -f documentation.sql
+psql -h your-supabase-url -U your-username -d your-database -f governance.sql
+psql -h your-supabase-url -U your-username -d your-database -f system_settings.sql
+psql -h your-supabase-url -U your-username -d your-database -f users_agents.sql
+```
 
 # Setting Up Supabase and Installing SQL Files
 
