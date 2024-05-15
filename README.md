@@ -145,5 +145,11 @@ These features and capabilities are designed to make the Agentic Employment Infr
 1. Clone the repository.
 2. Run the setup script to create the folder structure and files.
 3. Install the required dependencies.
-4. Launch the backend and frontend services using Docker Compose.
+4. **Install SQL Files into Supabase**:
+    Follow the instructions in the [SQL README](https://github.com/ruvnet/agentic-employment/blob/main/sql/readme.md) to install the SQL files into your Supabase database.
+    ```sh
+    cd sql
+    ./install_sql.sh
+    ```
+6. Launch the backend and frontend services using Docker Compose.
 
