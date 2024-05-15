@@ -165,9 +165,7 @@ CREATE POLICY "Enable real-time" ON analytics_reporting FOR SELECT USING (true);
 CREATE POLICY "Enable real-time" ON chat_history_agent_details FOR SELECT USING (true);
 CREATE POLICY "Enable real-time" ON command_control FOR SELECT USING (true);
 CREATE POLICY "Enable real-time" ON documentation FOR SELECT USING (true);
-CREATE POLICY "Enable
-
- real-time" ON governance FOR SELECT USING (true);
+CREATE POLICY "Enable real-time" ON governance FOR SELECT USING (true);
 CREATE POLICY "Enable real-time" ON system_settings FOR SELECT USING (true);
 CREATE POLICY "Enable real-time" ON users_agents FOR SELECT USING (true);
 
