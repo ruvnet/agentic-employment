@@ -1,6 +1,15 @@
 import subprocess
 import os
 
+
+# Load environment variables
+load_dotenv()
+
+# Configuration constants
+SECRET_KEY = os.getenv("SECRET_KEY", "your_secret_key")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 def start_backend():
     os.chdir(os.path.dirname(__file__))
     subprocess.run(["uvicorn", "backend.app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8001"])
