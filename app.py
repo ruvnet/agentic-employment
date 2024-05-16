@@ -14,6 +14,8 @@ import os
 # / /   | |||     || `''-...... -'  |  |   |  |  |  '.'      `-.______ /  
 # \ \._,\ '\'. __//                 |  |   |  |  |   /                `   
 #  `--'  `" `'---'                  '--'   '--'  `'-'                     
+# 
+#                           created by rUv
 
 # Load environment variables
 load_dotenv()
