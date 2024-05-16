@@ -11,3 +11,5 @@ supabase
 python-dotenv
 authentication
 bcrypt
+python-jose
+pyjwt
