@@ -1,19 +1,40 @@
-To authenticate users in your FastAPI application and secure your routes, you'll need to implement JWT (JSON Web Token) authentication. Here’s a step-by-step guide to setting up and using JWT authentication in your FastAPI application.
+ 
+# FastAPI JWT Authentication Guide
 
-### Step 1: Install Required Packages
+This guide provides step-by-step instructions on how to implement JWT (JSON Web Token) authentication in your FastAPI application to secure routes and authenticate users.
 
-Make sure you have `fastapi`, `httpx`, and `python-jose` installed:
+## Prerequisites
+
+Ensure you have the following packages installed:
 
 ```sh
 pip install fastapi httpx python-jose python-dotenv
 ```
 
-### Step 2: Create the Authentication Utilities
+## Project Structure
 
-Create a file `backend/app/utils/auth.py` for the authentication utilities. This will handle JWT encoding and decoding.
+Here's an overview of the project's directory structure:
+
+```
+backend/
+├── app/
+│   ├── main.py
+│   ├── routes/
+│   │   ├── agent.py
+│   │   ├── settings.py
+│   │   └── users.py
+│   └── utils/
+│       ├── auth.py
+│       └── helpers.py
+ 
+```
+
+## Step 1: Create the Authentication Utilities
+
+Create a file `backend/app/utils/auth.py` to handle JWT encoding and decoding.
 
 ```python
-from fastapi import Depends, HTTPException, Security
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from pydantic import BaseModel
@@ -22,7 +43,7 @@ import os
 from datetime import datetime, timedelta
 
 # Load environment variables
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "your_secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -42,11 +63,9 @@ class UserInDB(User):
     hashed_password: str
 
 def verify_password(plain_password, hashed_password):
-    # Implement your password hashing and verification logic here
     return plain_password == hashed_password  # This is just for demonstration
 
 def get_user(email: str):
-    # Replace this with your database call to get the user
     if email == "test@example.com":
         return UserInDB(**{
             "email": email,
@@ -92,14 +111,13 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 ```
 
-### Step 3: Create the Token Endpoint
+## Step 2: Create the Token Endpoint
 
-Create a token endpoint in `backend/app/routes/users.py` to handle user authentication and token generation.
+Add a token endpoint in `backend/app/routes/users.py` to handle user authentication and token generation.
 
 ```python
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from typing import Optional
 from backend.app.utils.auth import authenticate_user, create_access_token, Token, ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
@@ -126,13 +144,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 ```
 
-### Step 4: Protect Your Routes
+## Step 3: Protect Your Routes
 
-Update the `users.py` file to protect the routes using the authentication utilities.
+Update the `users.py` file to protect routes using the authentication utilities.
 
 ```python
 from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 import os
 import httpx
@@ -148,7 +166,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 # Define Pydantic models
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
     role: Optional[str] = None
 
 class UserCreate(UserBase):
@@ -241,9 +259,9 @@ async def delete_user(user_id: str, current_user: TokenData = Depends(get_curren
             raise HTTPException(status_code=response.status_code, detail=response.text)
 ```
 
-### Step 5: Update `main.py`
+## Step 4: Update `main.py`
 
-Ensure that the `main.py` file includes the `users` router and properly initializes the application:
+Ensure `main.py` includes the `users` router and initializes the FastAPI app properly.
 
 ```python
 from fastapi import FastAPI
@@ -264,9 +282,11 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-### Step 6: Obtain and Use the Token
+## Step 5: Obtain and Use the Token
 
-To authenticate, you need to obtain a token by sending a POST request to `/token` endpoint with your credentials.
+To authenticate, obtain a token by sending a
+
+ POST request to the `/token` endpoint with your credentials.
 
 ```sh
 curl -X POST "http://localhost:8000/token" -H "Content-Type: application/x-www-form-urlencoded" -d "username=test@example.com&password=fakehashedpassword"
@@ -284,4 +304,18 @@ The response will contain the JWT token, which you can use to authenticate subse
 For example, to access the `/users` endpoint:
 
 ```sh
-curl -X GET "http://localhost:8000/users
+curl -X GET "http://localhost:8000/users" -H "Authorization: Bearer your_jwt_token"
+```
+
+## Step 6: Authorize in FastAPI Docs
+
+To use the FastAPI interactive docs for testing, you need to authenticate by clicking on the "Authorize" button and entering your credentials.
+
+1. Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser.
+2. Click on the "Authorize" button.
+3. Enter your username and password.
+4. Click on "Authorize" and then "Close".
+
+You should now be able to access the secured endpoints directly from the interactive docs.
+
+This completes the setup for JWT authentication in your FastAPI application. Your routes are now protected, and users can authenticate using JWT tokens.
