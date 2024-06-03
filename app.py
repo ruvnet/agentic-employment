@@ -1,21 +1,26 @@
 import subprocess
 import os
+from dotenv import load_dotenv
+from multiprocessing import Process
 
-#                                                                _..._     
-#                                                            .-'_..._''.  
-#                      __.....__       _..._          .--. .' .'      '.\ 
-#           .--./) .-''         '.   .'     '.        |__|/ .'            
-#          /.''\\ /     .-''"'-.  `..   .-.   .    .| .--. '              
-#     __  | |  | /     /________\   |  '   '  |  .' |_|  | |              
-#  .:--.'. \`-' /|                  |  |   |  |.'     |  | |              
-# / |   \ |/("'` \    .-------------|  |   |  '--.  .-|  . '              
-# `" __ | |\ '---.\    '-.____...---|  |   |  |  |  | |  |\ '.          . 
-#  .'.''| | /'""'.\`.             .'|  |   |  |  |  | |__| '. `._____.-'/ 
-# / /   | |||     || `''-...... -'  |  |   |  |  |  '.'      `-.______ /  
-# \ \._,\ '\'. __//                 |  |   |  |  |   /                `   
-#  `--'  `" `'---'                  '--'   '--'  `'-'                     
-# 
-#                           created by rUv
+# Welcome message
+print("""
+                                                                _..._     
+                                                            .-'_..._''.  
+                      __.....__       _..._          .--. .' .'      '.\ 
+           .--./) .-''         '.   .'     '.        |__|/ .'            
+          /.''\\ /     .-''"'-.  `..   .-.   .    .| .--. '              
+     __  | |  | /     /________\   |  '   '  |  .' |_|  | |              
+  .:--.'. \`-' /|                  |  |   |  |.'     |  | |              
+ / |   \ |/("'` \    .-------------|  |   |  '--.  .-|  . '              
+ `" __ | |\ '---.\    '-.____...---|  |   |  |  |  | |  |\ '.          . 
+  .'.''| | /'""'.\`.             .'|  |   |  |  |  | |__| '. `._____.-'/ 
+ / /   | |||     || `''-...... -'  |  |   |  |  |  '.'      `-.______ /  
+ \ \._,\ '\'. __//                 |  |   |  |  |   /                `   
+  `--'  `" `'---'                  '--'   '--'  `'-'                     
+
+                           created by rUv
+""")
 
 # Load environment variables
 load_dotenv()
@@ -33,9 +38,7 @@ def start_frontend():
     os.chdir(os.path.dirname(__file__))
     subprocess.run(["python", "-m", "frontend.main"])
 
-if __name__ == "__main__":
-    from multiprocessing import Process
-
+def main():
     backend_process = Process(target=start_backend)
     backend_process.start()
 
@@ -44,3 +47,6 @@ if __name__ == "__main__":
 
     backend_process.join()
     frontend_process.join()
+
+if __name__ == "__main__":
+    main()

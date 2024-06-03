@@ -17,6 +17,27 @@ Check out the demo of the Agentic Employment Infrastructure on Hugging Face Spac
 
 The Agentic Employment Infrastructure aims to revolutionize the way businesses manage and interact with their workforce. By leveraging cutting-edge AI and machine learning technologies, this platform automates routine tasks, optimizes workforce management, and provides insightful analytics to drive decision-making.
 
+## Installation
+
+You can install the Agentic Employment package using `pip`. Make sure you have Python installed, then run the following command:
+
+```bash
+pip install Agentic-Employment
+```
+
+## Run
+```
+agentic-employment
+```
+
+Configuration
+The application uses environment variables for configuration. You can set these variables in a .env file in the root directory of your project. Here is an example of the .env file:
+
+```
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
 ## Benefits
 
 - **Efficiency**: Automates routine and complex tasks, reducing the need for manual intervention and speeding up processes.
