@@ -178,7 +178,7 @@ async def create_user(user: UserCreate, current_user: TokenData = Depends(get_cu
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{SUPABASE_URL}/rest/v1/users",
-            json=user.dict(),
+            json=user.model_dump(),
             headers=get_headers()
         )
         if response.status_code == 201:

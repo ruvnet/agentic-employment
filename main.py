@@ -1,9 +1,6 @@
 from fastapi import FastAPI
-from backend.app.routes import agent_router, settings, users, analytics_router, collaboration_router, governance_router  # Import the users router
-
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from routers import agents, analytics, collaboration, governance, settings
 
 app = FastAPI(
     title="AI Agent Management System API",
@@ -21,10 +18,10 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(agent_router.router)
-app.include_router(analytics_router.router)
-app.include_router(collaboration_router.router)
-app.include_router(governance_router.router)
+app.include_router(agents.router)
+app.include_router(analytics.router)
+app.include_router(collaboration.router)
+app.include_router(governance.router)
 app.include_router(settings.router)
 
 @app.get("/")
